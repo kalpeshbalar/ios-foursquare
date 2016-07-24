@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="15F34" minimumToolsVersion="Xcode 7.0">
+    <entity name="Pin" representedClassName=".Pin" syncable="YES">
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <relationship name="places" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Place" inverseName="pin" inverseEntity="Place" syncable="YES"/>
+    </entity>
+    <entity name="Place" representedClassName=".Place" syncable="YES">
+        <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="rating" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="pin" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Pin" inverseName="places" inverseEntity="Pin" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Pin" positionX="-63" positionY="-18" width="128" height="90"/>
+        <element name="Place" positionX="-63" positionY="0" width="128" height="120"/>
+    </elements>
+</model>
