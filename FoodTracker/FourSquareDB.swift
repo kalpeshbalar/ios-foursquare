@@ -51,7 +51,7 @@ class FourSquareDB : NSObject {
         
         let task = session.dataTaskWithRequest(request) { (data, response, error) in
             
-            var errorMsg = error!.localizedDescription
+            var errorMsg = "Unknown error occured"
             var userInfo = [String : AnyObject]()
             
             /* GUARD: Was there an error? */

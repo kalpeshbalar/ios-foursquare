@@ -116,6 +116,10 @@
                                     <outlet property="delegate" destination="4lx-3c-TcJ" id="cDG-yY-OZc"/>
                                 </connections>
                             </tableView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="YNe-Lb-MVu">
+                                <rect key="frame" x="282" y="281" width="37" height="37"/>
+                                <color key="color" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -129,9 +133,12 @@
                             <constraint firstItem="je2-Id-ggt" firstAttribute="leading" secondItem="9F9-NT-3fz" secondAttribute="leadingMargin" constant="-20" id="eQe-FO-KnS"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Gz7-Wh-TNO" secondAttribute="trailing" constant="-20" id="jVj-cQ-mEh"/>
                             <constraint firstItem="je2-Id-ggt" firstAttribute="top" secondItem="JDh-O6-m1s" secondAttribute="bottom" id="jjk-wp-0Am"/>
+                            <constraint firstItem="YNe-Lb-MVu" firstAttribute="centerY" secondItem="Gz7-Wh-TNO" secondAttribute="centerY" id="svd-DX-Eij"/>
+                            <constraint firstItem="YNe-Lb-MVu" firstAttribute="centerX" secondItem="je2-Id-ggt" secondAttribute="centerX" id="wwT-NK-kat"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="YNe-Lb-MVu" id="4p1-eU-0JQ"/>
                         <outlet property="mapView" destination="je2-Id-ggt" id="9kn-fc-97F"/>
                         <outlet property="reloadButton" destination="Exe-l4-pBY" id="dWe-wE-ovK"/>
                         <outlet property="tableView" destination="Gz7-Wh-TNO" id="zDX-en-FhU"/>

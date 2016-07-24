@@ -17,8 +17,11 @@ class ListViewController: UIViewController, NSFetchedResultsControllerDelegate, 
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var reloadButton: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
+        self.activityIndicator.alpha = 0.0
+        self.activityIndicator.stopAnimating()
         super.viewDidLoad()
         addPin()
         
@@ -75,6 +78,9 @@ class ListViewController: UIViewController, NSFetchedResultsControllerDelegate, 
     }()
 
     @IBAction func reloadCollection(sender: AnyObject?) {
+        self.activityIndicator.alpha = 1.0
+        self.activityIndicator.startAnimating()
+        
         sharedContext.performBlockAndWait({
             for place in self.fetchedResultsController.fetchedObjects as! [Place] {
                 place.pin = nil
@@ -101,6 +107,8 @@ class ListViewController: UIViewController, NSFetchedResultsControllerDelegate, 
                     
                     // Update the table on the main thread
                     dispatch_async(dispatch_get_main_queue()) {
+                        self.activityIndicator.alpha = 0.0
+                        self.activityIndicator.stopAnimating()
                         self.tableView.reloadData()
                     }
                 }
