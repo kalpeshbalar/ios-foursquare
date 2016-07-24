@@ -55,6 +55,7 @@ class MapViewController: UIViewController {
         do {
             return try sharedContext.executeFetchRequest(fetchRequest) as! [Pin]
         } catch _ {
+            displayError("Error reading local database")
             return [Pin]()
         }
     }
@@ -90,6 +91,16 @@ class MapViewController: UIViewController {
         default:
             return
         }
+    }
+    
+    func displayError(errorString: String?) {
+        dispatch_async(dispatch_get_main_queue(), {
+            if let errorString = errorString {
+                let alertController:UIAlertController = UIAlertController(title: "Error", message: errorString, preferredStyle: UIAlertControllerStyle.Alert)
+                alertController.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
+                self.presentViewController(alertController, animated: true, completion: nil)
+            }
+        })
     }
 }
 

@@ -25,7 +25,7 @@ class ListViewController: UIViewController, NSFetchedResultsControllerDelegate, 
         do {
             try fetchedResultsController.performFetch()
         } catch {
-            print(error)
+            displayError("Error reading local database")
         }
         
         fetchedResultsController.delegate = self
@@ -75,7 +75,6 @@ class ListViewController: UIViewController, NSFetchedResultsControllerDelegate, 
     }()
 
     @IBAction func reloadCollection(sender: AnyObject?) {
-        print("Loading places")
         sharedContext.performBlockAndWait({
             for place in self.fetchedResultsController.fetchedObjects as! [Place] {
                 place.pin = nil
@@ -86,7 +85,7 @@ class ListViewController: UIViewController, NSFetchedResultsControllerDelegate, 
         
         FourSquareDB.sharedInstance().searchPlacesByLatLon(pin) { JSONResult, error  in
             if let error = error {
-                print(error)
+                self.displayError(error.localizedDescription)
             } else {
                 if let groups = JSONResult.valueForKey("groups") as? [[String: AnyObject]] {
                     for group in groups {
@@ -144,10 +143,7 @@ class ListViewController: UIViewController, NSFetchedResultsControllerDelegate, 
     
     // MARK: - Configure Cell
     func configureCell(cell: UITableViewCell, place: Place) {
-        
         cell.textLabel!.text = place.title
-        print(place.rating)
-        print(place.address)
         cell.detailTextLabel!.text = place.address
     }
 
@@ -192,6 +188,16 @@ class ListViewController: UIViewController, NSFetchedResultsControllerDelegate, 
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         self.tableView.endUpdates()
+    }
+    
+    func displayError(errorString: String?) {
+        dispatch_async(dispatch_get_main_queue(), {
+            if let errorString = errorString {
+                let alertController:UIAlertController = UIAlertController(title: "Error", message: errorString, preferredStyle: UIAlertControllerStyle.Alert)
+                alertController.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
+                self.presentViewController(alertController, animated: true, completion: nil)
+            }
+        })
     }
  }
 

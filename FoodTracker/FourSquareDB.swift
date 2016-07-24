@@ -41,15 +41,18 @@ class FourSquareDB : NSObject {
             "ll": "\(pin.latitude),\(pin.longitude)",
             "venuePhotos" : Constants.PHOTO
         ]
-        return getPlacesFromFlickrBySearch(methodArguments, completionHandler: completionHandler)
+        return getPlacesFromFoursquareBySearch(methodArguments, completionHandler: completionHandler)
     }
     
-    func getPlacesFromFlickrBySearch(methodArguments: [String : AnyObject], completionHandler: CompletionHander) -> NSURLSessionDataTask {
+    func getPlacesFromFoursquareBySearch(methodArguments: [String : AnyObject], completionHandler: CompletionHander) -> NSURLSessionDataTask {
         let urlString = Constants.BASE_URL + escapedParameters(methodArguments)
         let url = NSURL(string: urlString)!
         let request = NSURLRequest(URL: url)
         
         let task = session.dataTaskWithRequest(request) { (data, response, error) in
+            
+            var errorMsg = error!.localizedDescription
+            var userInfo = [String : AnyObject]()
             
             /* GUARD: Was there an error? */
             guard (error == nil) else {
@@ -61,18 +64,22 @@ class FourSquareDB : NSObject {
             /* GUARD: Did we get a successful 2XX response? */
             guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
                 if let response = response as? NSHTTPURLResponse {
-                    print("Your request returned an invalid response! Status code: \(response.statusCode)!")
+                    errorMsg = "Your request returned an invalid response! Status code: \(response.statusCode)!"
                 } else if let response = response {
-                    print("Your request returned an invalid response! Response: \(response)!")
+                    errorMsg = "Your request returned an invalid response! Response: \(response)!"
                 } else {
-                    print("Your request returned an invalid response!")
+                    errorMsg = "Your request returned an invalid response!"
                 }
+                userInfo[NSLocalizedFailureReasonErrorKey] = errorMsg
+                completionHandler(result: nil, error: NSError(domain: "world", code: 1, userInfo: userInfo))
                 return
             }
             
             /* GUARD: Was there any data returned? */
             guard let data = data else {
-                print("No data was returned by the request!")
+                errorMsg = "No data was returned by the request!"
+                userInfo[NSLocalizedFailureReasonErrorKey] = errorMsg
+                completionHandler(result: nil, error: NSError(domain: "world", code: 1, userInfo: userInfo))
                 return
             }
             
@@ -82,13 +89,17 @@ class FourSquareDB : NSObject {
                 parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments)
             } catch {
                 parsedResult = nil
-                print("Could not parse the data as JSON: '\(data)'")
+                errorMsg = "Could not parse the data as JSON: '\(data)'"
+                userInfo[NSLocalizedFailureReasonErrorKey] = errorMsg
+                completionHandler(result: nil, error: NSError(domain: "world", code: 1, userInfo: userInfo))
                 return
             }
             
             /* GUARD: Is "response" key in our result? */
             guard let resp = parsedResult["response"] as? NSDictionary else {
-                print("Cannot find keys 'response' in \(parsedResult)")
+                errorMsg = "Cannot find keys 'response' in \(parsedResult)"
+                userInfo[NSLocalizedFailureReasonErrorKey] = errorMsg
+                completionHandler(result: nil, error: NSError(domain: "world", code: 1, userInfo: userInfo))
                 return
             }
             
