@@ -90,6 +90,7 @@ class ListViewController: UIViewController, NSFetchedResultsControllerDelegate, 
         })
         
         FourSquareDB.sharedInstance().searchPlacesByLatLon(pin) { JSONResult, error  in
+
             if let error = error {
                 self.displayError(error.localizedDescription)
             } else {
@@ -200,6 +201,9 @@ class ListViewController: UIViewController, NSFetchedResultsControllerDelegate, 
     
     func displayError(errorString: String?) {
         dispatch_async(dispatch_get_main_queue(), {
+            self.activityIndicator.alpha = 0.0
+            self.activityIndicator.stopAnimating()
+
             if let errorString = errorString {
                 let alertController:UIAlertController = UIAlertController(title: "Error", message: errorString, preferredStyle: UIAlertControllerStyle.Alert)
                 alertController.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
