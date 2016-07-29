@@ -17,6 +17,7 @@ class MapViewController: UIViewController {
     
     var pins = [Pin]()
     var annotation: MyAnnotation!
+    @IBOutlet weak var segControl: UISegmentedControl!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -102,6 +103,23 @@ class MapViewController: UIViewController {
             }
         })
     }
+    
+    @IBAction func changeMap(sender: UISegmentedControl) {
+        switch (segControl.selectedSegmentIndex) {
+            case 0:
+                mapView.mapType = MKMapType.Standard;
+                break;
+            case 1:
+                mapView.mapType = MKMapType.Satellite;
+                break;
+            case 2:
+                mapView.mapType = MKMapType.Hybrid;
+                break;
+            default:
+                break;
+        }
+    }
+    
 }
 
 
